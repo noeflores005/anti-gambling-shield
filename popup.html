@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anti-Gambling Shield</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0F1011;
+      --surface:    #161719;
+      --surface-2:  #1E2022;
+      --border:     #2A2D31;
+      --border-mid: #383C42;
+      --ink:        #F0F2F5;
+      --ink-2:      #A8B0BC;
+      --ink-3:      #636B78;
+      --ink-4:      #3E444D;
+      --blue:       #E8253A;
+      --blue-bg:    #1E1214;
+      --green:      #22C55E;
+      --green-bg:   #0F1E16;
+      --amber:      #F59E0B;
+      --amber-bg:   #1C1708;
+      --red:        #E8253A;
+      --red-bg:     #1E1214;
+      --mono:       'DM Mono', monospace;
+      --sans:       'DM Sans', -apple-system, sans-serif;
+      --r:          3px;
+    }
+
+    body {
+      width: 340px;
+      min-height: 480px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--red);
+      border-radius: var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg {
+      width: 16px;
+      height: 16px;
+      color: #fff;
+    }
+
+    .brand-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: var(--ink-3);
+      font-family: var(--mono);
+      font-weight: 400;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .version-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--ink-3);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 99px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── STATUS ROW ─────────────────────────────────────── */
+    .status-row {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-dot.active   { background: var(--green); }
+    .status-dot.inactive { background: var(--ink-4); }
+
+    .status-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .status-label.inactive { color: var(--ink-3); }
+
+    .status-meta {
+      font-size: 11px;
+      color: var(--ink-3);
+      font-family: var(--mono);
+    }
+
+    /* ── TOGGLE ─────────────────────────────────────────── */
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--border-mid);
+      border-radius: 99px;
+      transition: background 0.15s ease;
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      background: var(--ink-2);
+      border-radius: 50%;
+      transition: transform 0.15s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .toggle input:checked ~ .toggle-track { background: var(--green); }
+    .toggle input:checked ~ .toggle-thumb { transform: translateX(18px); background: #fff; }
+
+    /* ── SECTION ─────────────────────────────────────────── */
+    .section {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: var(--mono);
+      margin-bottom: 10px;
+    }
+
+    /* ── STREAK ─────────────────────────────────────────── */
+    .streak-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+    }
+
+    .streak-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .streak-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .streak-value {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .streak-unit {
+      font-size: 11px;
+      color: var(--ink-3);
+      margin-top: 2px;
+      font-family: var(--mono);
+    }
+
+    .streak-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--green);
+      background: var(--green-bg);
+      border: 1px solid #1A4D2E;
+      padding: 3px 8px;
+      border-radius: 99px;
+    }
+
+    .streak-badge.new {
+      color: var(--red);
+      background: var(--red-bg);
+      border-color: #4A1520;
+    }
+
+    /* ── MODE SELECTOR ───────────────────────────────────── */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .mode-option {
+      padding: 10px 11px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      cursor: pointer;
+      transition: border-color 0.12s ease, background 0.12s ease;
+      position: relative;
+    }
+
+    .mode-option:hover { border-color: var(--border-mid); }
+
+    .mode-option.active {
+      border-color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .mode-option-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3px;
+    }
+
+    .mode-option-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .mode-option.active .mode-option-name { color: var(--red); }
+
+    .mode-radio {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-mid);
+      flex-shrink: 0;
+      position: relative;
+      transition: border-color 0.12s;
+    }
+
+    .mode-option.active .mode-radio {
+      border-color: var(--red);
+      background: var(--red);
+    }
+
+    .mode-option.active .mode-radio::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .mode-option-desc {
+      font-size: 10px;
+      color: var(--ink-3);
+      font-family: var(--mono);
+      line-height: 1.35;
+    }
+
+    /* ── STATS ───────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .stat-cell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 9px 10px;
+    }
+
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .stat-value.accent { color: var(--red); }
+
+    .stat-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-3);
+      font-family: var(--mono);
+    }
+
+    /* ── NOTICE STRIP ────────────────────────────────────── */
+    .notice {
+      display: none;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-family: var(--mono);
+      line-height: 1.5;
+      border-radius: var(--r);
+      margin-top: 8px;
+    }
+
+    .notice.visible { display: block; }
+
+    .notice.warn {
+      background: var(--amber-bg);
+      border: 1px solid #4A3000;
+      color: var(--amber);
+    }
+
+    .notice.info {
+      background: var(--red-bg);
+      border: 1px solid #4A1520;
+      color: #F07080;
+    }
+
+    .notice strong { font-weight: 600; }
+
+    /* ── ACTION ROW ──────────────────────────────────────── */
+    .action-row {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: var(--r);
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease;
+      text-align: center;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+    }
+
+    .btn-primary:hover { background: #C41E30; border-color: #C41E30; }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      color: var(--ink-2);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover { border-color: var(--border-mid); color: var(--ink); }
+
+    .btn.loading { opacity: 0.5; pointer-events: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinning { display: inline-block; animation: spin 0.8s linear infinite; }
+
+    /* ── SETTINGS PANEL ──────────────────────────────────── */
+    .settings-panel {
+      display: none;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .settings-panel.open { display: block; }
+
+    .input-group { margin-bottom: 12px; }
+    .input-group:last-child { margin-bottom: 0; }
+
+    .input-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-3);
+      font-family: var(--mono);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .input-row { display: flex; gap: 5px; }
+
+    .domain-input {
+      flex: 1;
+      padding: 7px 9px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 11px;
+      outline: none;
+      transition: border-color 0.12s;
+    }
+
+    .domain-input:focus { border-color: var(--red); }
+    .domain-input::placeholder { color: var(--ink-4); }
+
+    .add-btn {
+      padding: 7px 11px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      color: var(--ink-2);
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      white-space: nowrap;
+    }
+
+    .add-btn:hover { background: var(--border); border-color: var(--border-mid); }
+
+    .domain-list {
+      margin-top: 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-height: 72px;
+      overflow-y: auto;
+    }
+
+    .domain-tag {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+
+    .domain-tag button {
+      background: none;
+      border: none;
+      color: var(--ink-4);
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+      padding: 0 0 0 6px;
+      transition: color 0.1s;
+    }
+
+    .domain-tag button:hover { color: var(--red); }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-link {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink-3);
+      text-decoration: none;
+      transition: color 0.1s;
+    }
+
+    .footer-link:hover { color: var(--ink-2); }
+
+    .footer-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink-4);
+    }
+
+    /* ── TOAST ───────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%) translateY(48px);
+      background: var(--surface-2);
+      color: var(--ink);
+      border: 1px solid var(--border-mid);
+      border-radius: var(--r);
+      padding: 6px 12px;
+      font-size: 11px;
+      font-family: var(--mono);
+      transition: transform 0.2s cubic-bezier(0.16,1,0.3,1);
+      white-space: nowrap;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.warn    { background: var(--amber-bg); border-color: #4A3000; color: var(--amber); }
+    .toast.success { background: var(--green-bg); border-color: #1A4D2E; color: var(--green); }
+
+    /* ── SCROLLBAR ───────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 1L2 3.5V8.5C2 11.8 4.6 14.9 8 15.5C11.4 14.9 14 11.8 14 8.5V3.5L8 1Z" fill="white" opacity="0.25"/>
+          <path d="M8 1L2 3.5V8.5C2 11.8 4.6 14.9 8 15.5C11.4 14.9 14 11.8 14 8.5V3.5L8 1Z" stroke="white" stroke-width="1.25" stroke-linejoin="round"/>
+          <path d="M5.5 8L7.2 9.7L10.5 6.3" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Anti-Gambling Shield</div>
+        <div class="brand-sub">Browser Protection</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="version-pill">v1.1</span>
+    </div>
+  </div>
+
+  <!-- STATUS ROW -->
+  <div class="status-row">
+    <div class="status-left">
+      <div class="status-dot" id="statusDot"></div>
+      <div>
+        <div class="status-label" id="statusLabel">Loading…</div>
+        <div class="status-meta" id="statusMeta">—</div>
+      </div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="enableToggle">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+  </div>
+
+  <!-- STREAK -->
+  <div class="section">
+    <div class="section-title">Gambling-Free Streak</div>
+    <div class="streak-row">
+      <div class="streak-left">
+        <div class="streak-icon" id="streakIcon">🛡️</div>
+        <div>
+          <div class="streak-value" id="streakDays">0</div>
+          <div class="streak-unit">consecutive days</div>
+        </div>
+      </div>
+      <div class="streak-badge" id="streakBadge">Day 1</div>
+    </div>
+  </div>
+
+  <!-- MODE -->
+  <div class="section">
+    <div class="section-title">Blocking Mode</div>
+    <div class="mode-grid">
+      <div class="mode-option" id="modeStrict" data-mode="strict">
+        <div class="mode-option-header">
+          <span class="mode-option-name">Strict</span>
+          <div class="mode-radio"></div>
+        </div>
+        <div class="mode-option-desc">Hard block — site unreachable</div>
+      </div>
+      <div class="mode-option" id="modeSoft" data-mode="soft">
+        <div class="mode-option-header">
+          <span class="mode-option-name">Soft</span>
+          <div class="mode-radio"></div>
+        </div>
+        <div class="mode-option-desc">Warning shown, override allowed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="section">
+    <div class="section-title">Session Overview</div>
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-value accent" id="todayCount">0</div>
+        <div class="stat-label">Today</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value" id="blockedCount">0</div>
+        <div class="stat-label">All-Time</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value" id="domainCount" style="font-size:13px">—</div>
+        <div class="stat-label">Domains</div>
+      </div>
+    </div>
+
+    <!-- Notices inside stats section -->
+    <div class="notice warn" id="capNotice">
+      <strong>Rule limit reached.</strong> Chrome caps dynamic rules at 5,000.
+      Showing <span id="capNum">4,800</span> of <span id="totalNum">—</span> domains.
+      All built-in sites are protected.
+    </div>
+    <div class="notice info" id="fetchNotice"></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="action-row">
+    <button class="btn btn-primary" id="updateBtn">↻ Update List</button>
+    <button class="btn btn-secondary" id="settingsBtn">Settings</button>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="input-group">
+      <label class="input-label" for="customInput">Block domain</label>
+      <div class="input-row">
+        <input type="text" class="domain-input" id="customInput" placeholder="example.com" autocomplete="off">
+        <button class="add-btn" id="addCustom">Block</button>
+      </div>
+      <div class="domain-list" id="customList"></div>
+    </div>
+    <div class="input-group">
+      <label class="input-label" for="allowInput">Allow domain</label>
+      <div class="input-row">
+        <input type="text" class="domain-input" id="allowInput" placeholder="example.com" autocomplete="off">
+        <button class="add-btn" id="addAllow">Allow</button>
+      </div>
+      <div class="domain-list" id="allowList"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <a class="footer-link" href="https://www.ncpgambling.org/" target="_blank">
+      NCPG Helpline · 1-800-522-4700
+    </a>
+    <span class="footer-meta" id="lastUpdatedText">—</span>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

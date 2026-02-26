@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're Protected — Anti-Gambling Shield</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0F1011;
+      --surface:   #161719;
+      --surface-2: #1E2022;
+      --border:    #2A2D31;
+      --border-mid:#383C42;
+      --ink:       #F0F2F5;
+      --ink-2:     #A8B0BC;
+      --ink-3:     #636B78;
+      --ink-4:     #3E444D;
+      --red:       #E8253A;
+      --red-bg:    #1E1214;
+      --green:     #22C55E;
+      --green-bg:  #0F1E16;
+      --amber:     #F59E0B;
+      --mono:      'DM Mono', monospace;
+      --sans:      'DM Sans', -apple-system, sans-serif;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 64px 24px 80px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--red);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--ink-3);
+      font-family: var(--mono);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      margin-bottom: 48px;
+    }
+
+    .hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--green);
+      background: var(--green-bg);
+      border: 1px solid #1A4D2E;
+      padding: 5px 12px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+    }
+
+    .hero-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero-title span {
+      color: var(--red);
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--ink-3);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 18px 20px;
+    }
+
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-value.red { color: var(--red); }
+    .stat-value.green { color: var(--green); }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--ink-3);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-heading {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: var(--mono);
+      margin-bottom: 14px;
+    }
+
+    /* ── MODE CARDS ── */
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .mode-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card.recommended {
+      border-color: var(--red);
+    }
+
+    .mode-card.recommended::before {
+      content: 'Recommended';
+      position: absolute;
+      top: 0; right: 0;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--red);
+      background: var(--red-bg);
+      border-bottom-left-radius: 4px;
+      border-left: 1px solid var(--red);
+      border-bottom: 1px solid var(--red);
+      padding: 3px 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mode-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .mode-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .mode-desc {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.55;
+    }
+
+    /* ── COVERAGE LIST ── */
+    .coverage {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    .coverage-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .coverage-row:last-child { border-bottom: none; }
+
+    .coverage-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .coverage-icon {
+      width: 30px;
+      height: 30px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .coverage-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .coverage-examples {
+      font-size: 11px;
+      color: var(--ink-3);
+      font-family: var(--mono);
+      margin-top: 2px;
+    }
+
+    .coverage-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-4);
+      flex-shrink: 0;
+    }
+
+    /* ── HOW TO USE ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink-3);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-body {}
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--ink-3);
+      line-height: 1.5;
+    }
+
+    /* ── CTA ── */
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 12px 24px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.12s;
+    }
+
+    .btn-primary:hover { background: #C41E30; }
+
+    .btn-secondary {
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--ink-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color 0.12s, color 0.12s;
+    }
+
+    .btn-secondary:hover { border-color: var(--border-mid); color: var(--ink); }
+
+    /* ── HELP STRIP ── */
+    .help-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .help-left {}
+
+    .help-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .help-desc {
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .help-link {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: border-color 0.12s, color 0.12s;
+      flex-shrink: 0;
+    }
+
+    .help-link:hover { border-color: var(--border-mid); color: var(--ink); }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-4);
+    }
+
+    .footer-text a {
+      color: var(--ink-3);
+      text-decoration: none;
+    }
+
+    .footer-text a:hover { color: var(--ink-2); }
+
+    /* ── LOADING STATE ── */
+    .loading-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 12px; height: 12px;
+      border: 1.5px solid var(--border-mid);
+      border-top-color: var(--ink-3);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand-icon">
+      <svg viewBox="0 0 28 28" fill="none">
+        <path d="M14 2L3 6.5V14.5C3 20.9 7.9 26.8 14 28C20.1 26.8 25 20.9 25 14.5V6.5L14 2Z"
+          fill="white" opacity="0.2"/>
+        <path d="M14 2L3 6.5V14.5C3 20.9 7.9 26.8 14 28C20.1 26.8 25 20.9 25 14.5V6.5L14 2Z"
+          stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M9 14L12.5 17.5L19 11" stroke="white" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">Anti-Gambling Shield</div>
+      <div class="brand-sub">Browser Protection · v1.1</div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-status">
+      <div class="hero-status-dot"></div>
+      Protection active
+    </div>
+    <h1 class="hero-title">You're protected.<br><span>Let's keep it that way.</span></h1>
+    <p class="hero-desc">
+      Anti-Gambling Shield is now blocking thousands of gambling and sports betting sites in the background.
+      No setup needed — it works immediately. Here's what you should know.
+    </p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value red" id="domainCount">
+        <span class="loading-indicator"><span class="spinner"></span></span>
+      </div>
+      <div class="stat-label">Domains blocked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value green">Day 1</div>
+      <div class="stat-label">Your streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">Weekly</div>
+      <div class="stat-label">Auto-updates</div>
+    </div>
+  </div>
+
+  <!-- BLOCKING MODES -->
+  <div class="section-heading">Two blocking modes</div>
+  <div class="modes">
+    <div class="mode-card recommended">
+      <div class="mode-icon">🔒</div>
+      <div class="mode-name">Strict Mode</div>
+      <div class="mode-desc">
+        Sites are blocked at the network level. The page never loads.
+        Chrome shows an error — no way around it.
+        <br><br>
+        <strong style="color: var(--ink-2);">Best for:</strong> Anyone serious about staying off gambling sites.
+      </div>
+    </div>
+    <div class="mode-card">
+      <div class="mode-icon">⚠️</div>
+      <div class="mode-name">Soft Mode</div>
+      <div class="mode-desc">
+        A warning overlay appears before the site loads. You can choose to go back or continue anyway.
+        <br><br>
+        <strong style="color: var(--ink-2);">Best for:</strong> Accountability with flexibility — or testing the extension.
+      </div>
+    </div>
+  </div>
+
+  <!-- COVERAGE -->
+  <div class="section-heading">What gets blocked</div>
+  <div class="coverage">
+    <div class="coverage-row">
+      <div class="coverage-left">
+        <div class="coverage-icon">🏈</div>
+        <div>
+          <div class="coverage-name">US Sportsbooks</div>
+          <div class="coverage-examples">FanDuel, DraftKings, BetMGM, Caesars, BetRivers</div>
+        </div>
+      </div>
+      <div class="coverage-count">+ subdomains</div>
+    </div>
+    <div class="coverage-row">
+      <div class="coverage-left">
+        <div class="coverage-icon">🎯</div>
+        <div>
+          <div class="coverage-name">DFS Platforms</div>
+          <div class="coverage-examples">PrizePicks, Underdog, Sleeper, Betr, Boom Fantasy</div>
+        </div>
+      </div>
+      <div class="coverage-count">+ mirror domains</div>
+    </div>
+    <div class="coverage-row">
+      <div class="coverage-left">
+        <div class="coverage-icon">🌍</div>
+        <div>
+          <div class="coverage-name">International Books</div>
+          <div class="coverage-examples">Bet365, Betway, William Hill, Paddy Power, Pinnacle</div>
+        </div>
+      </div>
+      <div class="coverage-count">20+ countries</div>
+    </div>
+    <div class="coverage-row">
+      <div class="coverage-left">
+        <div class="coverage-icon">🎰</div>
+        <div>
+          <div class="coverage-name">Online Casinos</div>
+          <div class="coverage-examples">PokerStars, 888 Casino, Casumo, LeoVegas</div>
+        </div>
+      </div>
+      <div class="coverage-count"></div>
+    </div>
+    <div class="coverage-row">
+      <div class="coverage-left">
+        <div class="coverage-icon">₿</div>
+        <div>
+          <div class="coverage-name">Crypto Betting</div>
+          <div class="coverage-examples">Stake, Roobet, Cloudbet, BC.Game, Bitstarz</div>
+        </div>
+      </div>
+      <div class="coverage-count"></div>
+    </div>
+    <div class="coverage-row">
+      <div class="coverage-left">
+        <div class="coverage-icon">🏇</div>
+        <div>
+          <div class="coverage-name">Horse Racing + Lottery</div>
+          <div class="coverage-examples">TwinSpires, TVG, NYRABets, Lottoland</div>
+        </div>
+      </div>
+      <div class="coverage-count"></div>
+    </div>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="section-heading">Quick start</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">You're already protected</div>
+        <div class="step-desc">Strict mode is on by default. Just close this tab and keep browsing — blocked sites will fail to load automatically.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Click the shield icon to open the popup</div>
+        <div class="step-desc">See your streak, today's block count, and total domains protected. Switch modes or update the blocklist from there.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Add custom sites if needed</div>
+        <div class="step-desc">Open the popup → Settings → Block domain. Paste any URL you want blocked. You can also whitelist specific sites you trust.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Keep your streak going</div>
+        <div class="step-desc">Every day you keep protection active, your streak grows. Don't break the chain.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-row">
+    <a class="btn-primary" href="#" id="openPopup">Open extension popup</a>
+    <a class="btn-secondary" href="https://noeflores005.github.io/anti-gambling-shield/privacy" target="_blank">Privacy policy</a>
+  </div>
+
+  <!-- HELP STRIP -->
+  <div class="help-strip">
+    <div class="help-left">
+      <div class="help-title">Struggling with gambling addiction?</div>
+      <div class="help-desc">Free, confidential support is available 24 hours a day, 7 days a week.</div>
+    </div>
+    <a class="help-link" href="https://www.ncpgambling.org/" target="_blank">NCPG · 1-800-522-4700 →</a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-text">Anti-Gambling Shield · Built by Noe Flores</span>
+    <span class="footer-text">
+      <a href="https://noeflores005.github.io/anti-gambling-shield/privacy" target="_blank">Privacy Policy</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/noeflores005" target="_blank">GitHub</a>
+    </span>
+  </div>
+
+</div>
+
+<script>
+  // Load real domain count from extension storage
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    chrome.storage.local.get(['dynamicDomains', 'settings'], (data) => {
+      const count = data.dynamicDomains?.length || data.settings?.domainCount || 0;
+      const el = document.getElementById('domainCount');
+      if (count > 0) {
+        el.textContent = count.toLocaleString() + '+';
+      } else {
+        el.textContent = '5,000+';
+      }
+    });
+  } else {
+    document.getElementById('domainCount').textContent = '5,000+';
+  }
+
+  // "Open popup" just closes this tab — user can click the icon
+  document.getElementById('openPopup').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.close();
+  });
+</script>
+</body>
+</html>
